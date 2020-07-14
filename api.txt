@@ -1,0 +1,110 @@
+<?
+header('access-control-allow-headers: origin, content-type, accept');
+header('access-control-allow-origin: *');
+header('cache-control: no-store, no-cache, must-revalidate');
+
+// ini_set('error_reporting', E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+
+
+
+$postList = json_decode(file_get_contents('php://input'), true);
+
+
+$ob = new Main('mysql:dbname=ce26282_api;host=localhost', 'ce26282_api', 'Gsdflkje3lfs');
+$res = [];
+
+
+
+switch($postList['actions']){
+  case 'SELECT':
+    $res = $ob->getHome();
+
+    break;
+  case 'ADD':
+    $res = $ob->addHome($postList);
+    break;
+  case 'UPDATE':
+    $res = $ob->updateHome($postList);
+    break;
+}
+
+echo json_encode($res);
+
+
+class Main extends PDO{
+
+  public $dbh;
+  public $strField = '`STREET` = :STREET, 
+    `NUMBER` = :NUMBER,
+    `NUMBER_FLOORS` = :NUMBER_FLOORS,
+    `AREA` = :AREA,
+    `DATE_CONSTRUCTION` = :DATE_CONSTRUCTION';
+
+  function __constructor(){
+    parent::__construct();
+  }
+
+  public function getHome(){
+    $sth = $this->prepare("SELECT * FROM `home_sale`");
+    $sth->execute(array());
+    return $sth->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function addHome($arHome){
+
+    
+
+    $sth = $this->prepare("INSERT INTO `home_sale` SET ".$this->strField);
+    $sth->execute(
+      array(
+        'STREET' => $arHome['street'], 
+        'NUMBER' => $arHome['number'],
+        'NUMBER_FLOORS' => $arHome['number_floors'],
+        'AREA' => $arHome['area'],
+        'DATE_CONSTRUCTION' => $arHome['date_construction']
+      )
+    );
+
+    $info = $sth->errorInfo();
+    
+
+
+
+    if($info[0] === '00000'){
+      $res['SUCCESS'] = 'Успешно добавлен';
+    }else{
+      $res['ERROR'] = 'Ошибка добавления';
+    }
+
+    return $res;
+  }
+
+  public function updateHome($arr){
+    $sth = $this->prepare("UPDATE `home_sale` SET $this->strField WHERE `ID` = :ID");
+    $sth->execute(
+      array(
+        'ID' => $arr['id'], 
+        'STREET' => $arr['street'], 
+        'NUMBER' => $arr['number'],
+        'NUMBER_FLOORS' => $arr['number_floors'],
+        'AREA' => $arr['area'],
+        'DATE_CONSTRUCTION' => $arr['date_construction']
+      )
+    );
+
+    $info = $sth->errorInfo();
+
+    if($info[0] === '00000'){
+      $res['SUCCESS'] = 'Успешно изменен';
+    }else{
+      $res['ERROR'] = 'Ошибка изменения';
+    }
+    
+
+    return $res;
+  }
+}
+
+?>
