@@ -39,7 +39,7 @@ export default {
     }
 
     this.axios
-      .post('http://ce26282.tmweb.ru/', dataItem)
+      .post('http://ce26282.tmweb.ru/api/', dataItem)
       .then(response => {
         this.res = response.data
       })

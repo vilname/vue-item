@@ -74,6 +74,7 @@ export default {
       success: null,
       query: null,
       form: {
+        // id: null,
         street: null,
         number: null,
         number_floors: null,
@@ -96,12 +97,14 @@ export default {
       this.$v.$touch();
       if(this.$v.form.$error) return false
 
-      if(!this.query){
+      
+
+      if(!this.query.item){
         this.form.actions = 'ADD'
       }
 
       this.axios
-        .post('http://ce26282.tmweb.ru/', this.form)
+        .post('http://ce26282.tmweb.ru/api/', this.form)
         .then(response => {
           const res = response.data
 
@@ -113,21 +116,21 @@ export default {
   created: function(){
     this.query = this.$route.query
 
-    this.form = {
-      id: this.query.item.ID,
-      street: this.query.item.STREET,
-      number: this.query.item.NUMBER,
-      number_floors: this.query.item.NUMBER_FLOORS,
-      area: this.query.item.AREA,
-      date_construction: this.query.item.DATE_CONSTRUCTION,
-      actions: 'UPDATE'
-    }
+    
 
-    // this.axios
-    //   .post('http://ce26282.tmweb.ru/', dataItems)
-    //   .then(response => {
-    //     // const res = response.data
-    //   })
+    if(this.query.item){
+
+      this.form = {
+        id: this.query.item.ID,
+        street: this.query.item.STREET,
+        number: this.query.item.NUMBER,
+        number_floors: this.query.item.NUMBER_FLOORS,
+        area: this.query.item.AREA,
+        date_construction: this.query.item.DATE_CONSTRUCTION,
+        actions: 'UPDATE'
+      }
+    }
+    
 
     
   }
