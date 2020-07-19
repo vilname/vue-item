@@ -1,24 +1,6 @@
-# test
+# Работа на VUE
 
-## Project setup
-```
-npm install
-```
+Здесь есть страница формы добавления и редактирования домов с харакреристиками,
+страница вывода списка домов
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Фронт сделан на vue, бекенд на php (пример кода php лежит в папке api.txt)
